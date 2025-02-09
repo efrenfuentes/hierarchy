@@ -4,6 +4,7 @@ defmodule ForTesting.Section do
   """
 
   use Ecto.Schema
+  use Hierarchy
 
   @primary_key {:id, :binary_id, autogenerate: true}
 
