@@ -58,6 +58,7 @@ defmodule Hierarchy.LtreeTest do
       assert nil == LTree.concat(nil, nil)
       assert nil == LTree.concat(nil, "")
       assert "Top.Identity" == LTree.concat("Top.Identity", nil)
+      assert "Identity.Passport" = LTree.concat("Identity", "Passport")
     end
   end
 end
