@@ -4,7 +4,7 @@ defmodule Hierarchy.Repo.Migrations.AddSectionsTable do
   def change do
     execute "CREATE EXTENSION IF NOT EXISTS ltree" # Enables Ltree
 
-    create table(:sections) do
+    create table(:sections, primary_key: false) do
       add :id, :uuid, primary_key: true
 
       add :name, :string
