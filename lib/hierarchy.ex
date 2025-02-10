@@ -19,6 +19,9 @@ defmodule Hierarchy do
       end
   """
 
+  alias Hierarchy.Helpers
+  alias Hierarchy.Queries.{Root, Roots}
+
   defmacro __using__(opts) do
     path_column = Keyword.get(opts, :path_column, :path)
 
@@ -34,11 +37,16 @@ defmodule Hierarchy do
   defmacro __before_compile__(%{module: schema}) do
     quote do
       # utils
-      defdelegate root?(struct), to: Hierarchy.Helpers
-      defdelegate build_child_for(struct, attrs \\ %{}), to: Hierarchy.Helpers
+      defdelegate root?(struct), to: Helpers
+      defdelegate build_child_for(struct, attrs \\ %{}), to: Helpers
+      defdelegate root(struct), to: Root, as: :query
+
+      def roots do
+        Roots.query(unquote(schema))
+      end
 
       def build(attrs) do
-        Hierarchy.Helpers.build(unquote(schema), attrs)
+        Helpers.build(unquote(schema), attrs)
       end
     end
   end
