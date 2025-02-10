@@ -7,6 +7,9 @@ defmodule Hierarchy.DataCase do
   your tests.
   """
 
+  alias Ecto.Adapters.SQL.Sandbox
+  alias ForTesting.Section
+
   use ExUnit.CaseTemplate
 
   using(opts) do
@@ -20,7 +23,7 @@ defmodule Hierarchy.DataCase do
       import Hierarchy.DataCase
 
       def create_sections do
-        section_list = [
+        [
           "Top",
           "Top.Identity",
           "Top.Identity.Passport",
@@ -28,12 +31,27 @@ defmodule Hierarchy.DataCase do
           "Top.International Travel",
           "Top.International Travel.Border Entry"
         ]
+        |> Enum.reduce(%{}, fn name, acc ->
+          parent_name = Hierarchy.LTree.parent_path(name)
+          parent = Map.get(acc, parent_name, nil)
+
+          section =
+            case parent do
+              nil ->
+                Section.build(%{name: name}) |> Repo.insert!()
+
+              parent ->
+                Section.build_child_for(parent, %{name: name}) |> Repo.insert!()
+            end
+
+          Map.put(acc, name, section)
+        end)
       end
     end
   end
 
   setup do
-    Ecto.Adapters.SQL.Sandbox.mode(ForTesting.Repo, {:shared, self()})
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(ForTesting.Repo)
+    Sandbox.mode(ForTesting.Repo, {:shared, self()})
+    :ok = Sandbox.checkout(ForTesting.Repo)
   end
 end
