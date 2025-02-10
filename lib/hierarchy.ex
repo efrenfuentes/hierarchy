@@ -20,7 +20,7 @@ defmodule Hierarchy do
   """
 
   alias Hierarchy.Helpers
-  alias Hierarchy.Queries.{Ancestors, Children, Parent, Root, Roots, Siblings}
+  alias Hierarchy.Queries.{Ancestors, Children, Descendants, Parent, Root, Roots, Siblings}
 
   defmacro __using__(opts) do
     path_column = Keyword.get(opts, :path_column, :path)
@@ -43,6 +43,7 @@ defmodule Hierarchy do
       defdelegate parent(struct), to: Parent, as: :query
       defdelegate ancestors(struct, opts \\ []), to: Ancestors, as: :query
       defdelegate children(struct, opts \\ []), to: Children, as: :query
+      defdelegate descendants(struct, opts \\ []), to: Descendants, as: :query
       defdelegate siblings(struct, opts \\ []), to: Siblings, as: :query
 
       def roots do
