@@ -20,7 +20,7 @@ defmodule Hierarchy do
   """
 
   alias Hierarchy.Helpers
-  alias Hierarchy.Queries.{Root, Roots}
+  alias Hierarchy.Queries.{Parent, Root, Roots}
 
   defmacro __using__(opts) do
     path_column = Keyword.get(opts, :path_column, :path)
@@ -40,6 +40,7 @@ defmodule Hierarchy do
       defdelegate root?(struct), to: Helpers
       defdelegate build_child_for(struct, attrs \\ %{}), to: Helpers
       defdelegate root(struct), to: Root, as: :query
+      defdelegate parent(struct), to: Parent, as: :query
 
       def roots do
         Roots.query(unquote(schema))
