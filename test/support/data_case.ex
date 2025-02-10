@@ -28,6 +28,7 @@ defmodule Hierarchy.DataCase do
           "Top.Identity",
           "Top.Identity.Passport",
           "Top.Identity.Identity Pictures",
+          "Top.Identity.Others Documents",
           "Top.International Travel",
           "Top.International Travel.Border Entry"
         ]
@@ -53,5 +54,14 @@ defmodule Hierarchy.DataCase do
   setup do
     Sandbox.mode(ForTesting.Repo, {:shared, self()})
     :ok = Sandbox.checkout(ForTesting.Repo)
+  end
+
+  defmacro assert_match(list, another_list) do
+    quote location: :keep do
+      set = MapSet.new(unquote(list))
+      another_list = MapSet.new(unquote(another_list))
+
+      assert set == another_list
+    end
   end
 end
