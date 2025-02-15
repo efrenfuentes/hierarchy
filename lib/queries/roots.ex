@@ -18,6 +18,6 @@ defmodule Hierarchy.Queries.Roots do
   def roots_condition(schema) do
     path_column = schema.__hierarchy__(:path_column)
 
-    dynamic([q], field(q, ^path_column) == ^@roots_path)
+    dynamic([q], field(q, ^path_column) == ^@roots_path or is_nil(field(q, ^path_column)))
   end
 end
