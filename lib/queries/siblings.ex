@@ -25,7 +25,17 @@ defmodule Hierarchy.Queries.Siblings do
   defp siblings_with_self_condition(%schema{} = struct) do
     parent_path = Helpers.struct_path(struct)
 
-    dynamic([q], field(q, ^schema.__hierarchy__(:path_column)) == ^parent_path)
+    case Helpers.struct_path(struct) do
+      nil ->
+        dynamic(
+          [q],
+          field(q, ^schema.__hierarchy__(:path_column)) == "" or
+            is_nil(field(q, ^schema.__hierarchy__(:path_column)))
+        )
+
+      _ ->
+        dynamic([q], field(q, ^schema.__hierarchy__(:path_column)) == ^parent_path)
+    end
   end
 
   defp excluding_self_condition(%_schema{} = struct) do
